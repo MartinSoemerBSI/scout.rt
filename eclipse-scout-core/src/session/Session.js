@@ -1398,55 +1398,13 @@ export default class Session {
     if (applicationLoading) {
       this._applicationLoadingTimeoutId = setTimeout(() => {
         if (!this.desktop || !this.desktop.rendered) {
-          this._renderApplicationLoading();
+          App.get().renderApplicationLoading();
         }
       }, 200);
     } else {
       clearTimeout(this._applicationLoadingTimeoutId);
       this._applicationLoadingTimeoutId = null;
-      this._removeApplicationLoading();
-    }
-  }
-
-  _renderApplicationLoading() {
-    let $body = $('body'),
-      $loadingRoot = $body.children('.application-loading-root');
-    if (!$loadingRoot.length) {
-      $loadingRoot = $body.appendDiv('application-loading-root')
-        .addClass('application-loading-root')
-        .fadeIn();
-    }
-    this._renderApplicationLoadingElement($loadingRoot, 'application-loading01');
-    this._renderApplicationLoadingElement($loadingRoot, 'application-loading02');
-    this._renderApplicationLoadingElement($loadingRoot, 'application-loading03');
-  }
-
-  _renderApplicationLoadingElement($loadingRoot, cssClass) {
-    if ($loadingRoot.children('.' + cssClass).length) {
-      return;
-    }
-    // noinspection JSValidateTypes
-    $loadingRoot.appendDiv(cssClass).hide()
-      .fadeIn();
-  }
-
-  _removeApplicationLoading() {
-    let $loadingRoot = $('body').children('.application-loading-root');
-    // the fadeout animation only contains a to-value and no from-value
-    // therefore set the current value to the elements style
-    $loadingRoot.css('opacity', $loadingRoot.css('opacity'));
-    if ($loadingRoot.css('opacity') == 1) {
-      $loadingRoot.addClass('fadeout and-more');
-    } else {
-      $loadingRoot.addClass('fadeout');
-    }
-    if (Device.get().supportsCssAnimation()) {
-      $loadingRoot.oneAnimationEnd(() => {
-        $loadingRoot.remove();
-      });
-    } else {
-      // fallback for old browsers that do not support the animation-end event
-      $loadingRoot.remove();
+      App.get().removeApplicationLoading();
     }
   }
 
